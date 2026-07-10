@@ -4,7 +4,7 @@ import React from "react";
 
 export default function LeftCard() {
   return (
-    <div className="flex flex-col justify-between p-8 bg-[#F5F5F5] border border-[#EBEBEB] rounded-[24px] shadow-left-card h-[380px] w-full max-w-[380px] mx-auto md:mx-0 transition-all duration-300 hover:shadow-md">
+    <div className="flex flex-col justify-between p-8 shadow-left-card rounded-[24px] h-[380px] w-full max-w-[380px] mx-auto md:mx-0 transition-all duration-300 hover:shadow-md">
       <div>
         {/* Title & Subtitle */}
         <h2 className="text-[20px] font-bold text-[#111111] leading-[1.25] tracking-tight">
