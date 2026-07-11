@@ -75,54 +75,18 @@ export default function DataUsageModal({
             transition={{ type: "spring", stiffness: 120, damping: 20, mass: 0.8 }}
             className="relative w-[210px] h-[210px] flex items-center justify-center mx-auto mt-4 cursor-pointer select-none"
           >
-            {/* SVG Background Track & Neomorphic Groove Details */}
-            <svg
-              className="absolute inset-0 w-full h-full pointer-events-none select-none z-0"
-              viewBox="0 0 210 210"
-            >
+            {/* SVG Gradients Definitions */}
+            <svg className="absolute w-0 h-0" viewBox="0 0 0 0">
               <defs>
-                {/* Neomorphic subtle recessed gradient */}
-                <linearGradient id="track-gradient" x1="0%" y1="0%" x2="0%" y2="100%">
-                  <stop offset="0%" stopColor="#e8e8e8" />
-                  <stop offset="100%" stopColor="#fcfcfc" />
-                </linearGradient>
-                {/* Active progress neon gradient */}
                 <linearGradient id="progress-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
                   <stop offset="0%" stopColor="#52e050" />
                   <stop offset="100%" stopColor="#2fd475" />
                 </linearGradient>
               </defs>
-
-              {/* Recessed Track Groove */}
-              <circle
-                cx="105"
-                cy="105"
-                r={radius}
-                stroke="url(#track-gradient)"
-                strokeWidth="20"
-                fill="none"
-              />
-
-              {/* Inset Outer Rim Soft Shadow */}
-              <circle
-                cx="105"
-                cy="105"
-                r={radius + 10}
-                stroke="rgba(0,0,0,0.06)"
-                strokeWidth="1.2"
-                fill="none"
-              />
-
-              {/* Inset Inner Rim Soft Reflection Highlight */}
-              <circle
-                cx="105"
-                cy="105"
-                r={radius - 10}
-                stroke="rgba(255,255,255,0.95)"
-                strokeWidth="1.2"
-                fill="none"
-              />
             </svg>
+
+            {/* Recessed Neomorphic Groove Background with Physical Inset Shadow */}
+            <div className="absolute w-[184px] h-[184px] rounded-full bg-gradient-to-b from-[#e8e8e8] to-[#fcfcfc] shadow-[inset_0_4px_10px_rgba(0,0,0,0.08)] border border-gray-100/10 pointer-events-none select-none z-0" />
 
             {/* Radial Tick Marks (Diamond layout positioned radially below active layers) */}
             <div className="absolute inset-0 pointer-events-none z-10 select-none">

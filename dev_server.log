@@ -6,10 +6,9 @@
   - Local:        http://localhost:3000
 
  ✓ Starting...
- ✓ Ready in 1938ms
+ ✓ Ready in 3.4s
  ○ Compiling /showcase/data-usage ...
- ✓ Compiled /showcase/data-usage in 8.2s (1331 modules)
- GET /showcase/data-usage 200 in 9099ms
- ✓ Compiled in 887ms (656 modules)
- ✓ Compiled in 763ms (1322 modules)
- GET /showcase/data-usage 200 in 222ms
+ ✓ Compiled /showcase/data-usage in 7.2s (1331 modules)
+ GET /showcase/data-usage 200 in 8007ms
+ ✓ Compiled in 795ms (656 modules)
+[?25h
