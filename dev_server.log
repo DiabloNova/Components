@@ -2,14 +2,14 @@
 > my-app@0.1.0 dev
 > next dev
 
- ⚠ Port 3000 is in use, trying 3001 instead.
- ⚠ Port 3001 is in use, trying 3002 instead.
   ▲ Next.js 14.2.3
-  - Local:        http://localhost:3002
+  - Local:        http://localhost:3000
 
  ✓ Starting...
- ✓ Ready in 2.9s
- ○ Compiling /showcase/rails-payroll ...
- ✓ Compiled /showcase/rails-payroll in 7.2s (1304 modules)
- GET /showcase/rails-payroll 200 in 7965ms
- ✓ Compiled in 754ms (642 modules)
+ ✓ Ready in 1917ms
+ ○ Compiling /showcase/glass-card ...
+ ✓ Compiled /showcase/glass-card in 6.5s (1326 modules)
+ HEAD /showcase/glass-card 200 in 7029ms
+ ✓ Compiled in 786ms (653 modules)
+ GET /showcase/glass-card 200 in 68ms
+ GET /showcase/glass-card 200 in 32ms
