@@ -6,16 +6,10 @@
   - Local:        http://localhost:3000
 
  ✓ Starting...
- ✓ Ready in 3.4s
- ○ Compiling /showcase/data-usage ...
- ✓ Compiled /showcase/data-usage in 7.2s (1331 modules)
- GET /showcase/data-usage 200 in 8007ms
- ✓ Compiled in 795ms (656 modules)
+ ✓ Ready in 2.5s
+ ○ Compiling /showcase/liquid-glass ...
+ ✓ Compiled /showcase/liquid-glass in 6s (1340 modules)
+ GET /showcase/liquid-glass 200 in 6989ms
+ ✓ Compiled in 1089ms (665 modules)
+ GET /showcase/liquid-glass 200 in 59ms
 [?25h
- ✓ Ready in 1917ms
- ○ Compiling /showcase/glass-card ...
- ✓ Compiled /showcase/glass-card in 6.5s (1326 modules)
- HEAD /showcase/glass-card 200 in 7029ms
- ✓ Compiled in 786ms (653 modules)
- GET /showcase/glass-card 200 in 68ms
- GET /showcase/glass-card 200 in 32ms
