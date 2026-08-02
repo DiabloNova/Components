@@ -1,21 +1,11 @@
-
-> my-app@0.1.0 dev
-> next dev
-
   ▲ Next.js 14.2.3
   - Local:        http://localhost:3000
 
  ✓ Starting...
- ✓ Ready in 3.4s
- ○ Compiling /showcase/data-usage ...
- ✓ Compiled /showcase/data-usage in 7.2s (1331 modules)
- GET /showcase/data-usage 200 in 8007ms
- ✓ Compiled in 795ms (656 modules)
-[?25h
- ✓ Ready in 1917ms
- ○ Compiling /showcase/glass-card ...
- ✓ Compiled /showcase/glass-card in 6.5s (1326 modules)
- HEAD /showcase/glass-card 200 in 7029ms
- ✓ Compiled in 786ms (653 modules)
- GET /showcase/glass-card 200 in 68ms
- GET /showcase/glass-card 200 in 32ms
+ ✓ Ready in 1874ms
+ ○ Compiling / ...
+ ✓ Compiled / in 4.1s (585 modules)
+ ✓ Compiled in 471ms (280 modules)
+ GET / 200 in 4587ms
+ ○ Compiling /second-page ...
+ ✓ Compiled /second-page in 858ms (583 modules)
