@@ -2,10 +2,11 @@
   - Local:        http://localhost:3000
 
  ✓ Starting...
- ✓ Ready in 1874ms
+ ✓ Ready in 3s
  ○ Compiling / ...
- ✓ Compiled / in 4.1s (585 modules)
- ✓ Compiled in 471ms (280 modules)
- GET / 200 in 4587ms
+ ✓ Compiled / in 4.7s (579 modules)
+ GET / 200 in 5065ms
+ ✓ Compiled in 484ms (278 modules)
+ GET / 200 in 65ms
  ○ Compiling /second-page ...
- ✓ Compiled /second-page in 858ms (583 modules)
+ ✓ Compiled /second-page in 530ms (583 modules)
