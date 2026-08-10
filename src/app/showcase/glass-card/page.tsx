@@ -1,5 +1,6 @@
 import React from "react";
 import GlassCard from "@/components/ui/glass-card";
+import PageShell from "@/components/ui/page-shell";
 
 export const metadata = {
   title: "Premium Glass Card Showcase",
@@ -8,7 +9,7 @@ export const metadata = {
 
 export default function GlassCardShowcasePage() {
   return (
-    <main className="flex min-h-screen w-full flex-col items-center justify-center bg-[#E5E5E5] p-4 md:p-8 py-12 md:py-16 selection:bg-neutral-800 selection:text-white relative overflow-hidden">
+    <PageShell background="bg-[#E5E5E5]" className="overflow-hidden">
       {/* 3D background lighting and shadows mimicking the reference image atmosphere */}
       <div className="absolute top-[-20%] left-[-10%] w-[60%] h-[60%] rounded-full bg-gradient-to-tr from-white/30 to-white/0 filter blur-[80px] pointer-events-none" />
       <div className="absolute bottom-[-10%] right-[-10%] w-[50%] h-[50%] rounded-full bg-gradient-to-br from-neutral-200/50 to-neutral-400/10 filter blur-[100px] pointer-events-none" />
@@ -24,6 +25,6 @@ export default function GlassCardShowcasePage() {
           <path d="M12 2L14.8 9.2L22 12L14.8 14.8L12 22L9.2 14.8L2 12L9.2 9.2L12 2Z" fill="currentColor" />
         </svg>
       </div>
-    </main>
+    </PageShell>
   );
 }

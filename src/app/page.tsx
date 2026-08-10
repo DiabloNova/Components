@@ -1,10 +1,11 @@
 import React from "react";
 import BottomNavigation from "@/components/BottomNavigation";
 import HamburgerMenu from "@/components/HamburgerMenu";
+import PageShell from "@/components/ui/page-shell";
 
 export default function Home() {
   return (
-    <main className="flex min-h-screen flex-col items-center justify-center bg-[#EAEAEA] p-4 md:p-8 relative selection:bg-neutral-800 selection:text-white">
+    <PageShell padding="p-4 md:p-8">
       {/* Hamburger Menu fixed at top-right corner of the viewport */}
       <div className="absolute top-6 right-6 z-50">
         <HamburgerMenu />
@@ -26,6 +27,6 @@ export default function Home() {
           <BottomNavigation />
         </div>
       </div>
-    </main>
+    </PageShell>
   );
 }

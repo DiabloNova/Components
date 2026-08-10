@@ -3,6 +3,8 @@
  * designed for precision hardware-like aesthetics.
  */
 
+import type { Transition, Variants } from "framer-motion";
+
 export const transitions = {
   // Ultra smooth spring for physical objects with weight (marbles, indicators)
   inertialSpring: {
@@ -32,8 +34,29 @@ export const transitions = {
     type: "tween",
     ease: [0.16, 1, 0.3, 1], // easeOutQuart
     duration: 0.5,
-  }
-};
+  },
+
+  // Long, decelerating sweep used by circular dials filling up
+  dialSweep: {
+    type: "tween",
+    ease: [0.25, 1, 0.5, 1],
+    duration: 1.4,
+  },
+
+  // Panel/card entrance and exit
+  panelEase: {
+    type: "tween",
+    ease: [0.16, 1, 0.3, 1],
+    duration: 0.4,
+  },
+
+  // Hover lift on cards and panels
+  hoverLift: {
+    type: "tween",
+    ease: [0.25, 1, 0.5, 1],
+    duration: 0.3,
+  },
+} satisfies Record<string, Transition>;
 
 export const variants = {
   // Fade in elements elegantly from below
@@ -75,4 +98,4 @@ export const variants = {
       }
     }
   }
-};
+} satisfies Record<string, Variants>;

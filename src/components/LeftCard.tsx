@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+import Pill from "@/components/ui/pill";
 
 export default function LeftCard() {
   return (
@@ -21,17 +22,11 @@ export default function LeftCard() {
         {/* Badges/Pills - Row 1 and Row 2 exactly as original */}
         <div className="flex flex-col gap-2 mt-8">
           <div className="flex items-center gap-2">
-            <span className="bg-white text-[#555555] border border-[#E2E2E2] px-3.5 py-1 rounded-full text-[12px] font-medium shadow-[0_1px_2px_rgba(0,0,0,0.02)]">
-              v2.8.5
-            </span>
-            <span className="bg-[#EBF5EB] text-[#428142] border border-[#D3EAD3] px-3.5 py-1 rounded-full text-[12px] font-medium shadow-[0_1px_2px_rgba(0,0,0,0.01)]">
-              Open source
-            </span>
+            <Pill>v2.8.5</Pill>
+            <Pill tone="success">Open source</Pill>
           </div>
           <div>
-            <span className="inline-block bg-white text-[#555555] border border-[#E2E2E2] px-3.5 py-1 rounded-full text-[12px] font-medium shadow-[0_1px_2px_rgba(0,0,0,0.02)]">
-              database
-            </span>
+            <Pill>database</Pill>
           </div>
         </div>
       </div>
