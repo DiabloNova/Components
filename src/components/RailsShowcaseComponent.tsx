@@ -17,7 +17,7 @@ interface SphereConfig {
   type: "matte" | "teal" | "capsule";
 }
 
-const trackBases = [
+export const trackBases = [
   // Track 3 (Outer / Bottom-most in original visual hierarchy)
   {
     p0: { x: 224, y: -20 },
@@ -42,7 +42,7 @@ const trackBases = [
 ];
 
 // Evaluate cubic bezier at t (0 <= t <= 1)
-const getBezierPoint = (
+export const getBezierPoint = (
   t: number,
   p0: Point2D,
   p1: Point2D,
@@ -62,7 +62,7 @@ const getBezierPoint = (
 };
 
 // Evaluate derivative of cubic bezier at t to calculate tangent slope angle
-const getBezierTangentAngle = (
+export const getBezierTangentAngle = (
   t: number,
   p0: Point2D,
   p1: Point2D,
