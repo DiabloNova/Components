@@ -14,6 +14,14 @@ interface DataUsageModalProps {
   onClose: () => void;
 }
 
+function clampPercentage(value: number): number {
+  if (!Number.isFinite(value)) {
+    console.error("DataUsageModal received a non-finite percentage:", value);
+    return 0;
+  }
+  return Math.min(100, Math.max(0, value));
+}
+
 export default function DataUsageModal({
   percentage,
   usedAmount,
@@ -23,6 +31,10 @@ export default function DataUsageModal({
 }: DataUsageModalProps) {
   const [isDialHovered, setIsDialHovered] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
+
+  // A non-finite or out-of-range percentage would propagate NaN into the SVG
+  // stroke offsets and render an invisible dial with no visible failure.
+  const safePercentage = clampPercentage(percentage);
 
   // SVG circular progress geometry
   const radius = 82;
@@ -113,7 +125,7 @@ export default function DataUsageModal({
                 animate={{ opacity: isDialHovered ? 0.60 : 0.45 }}
                 transition={{ duration: 0.3 }}
               >
-                <ProgressArc radius={radius} center={center} percentage={percentage} />
+                <ProgressArc radius={radius} center={center} percentage={safePercentage} />
               </motion.svg>
             </div>
 
@@ -122,13 +134,13 @@ export default function DataUsageModal({
               className="absolute inset-0 w-full h-full transform -rotate-90 pointer-events-none z-30 select-none"
               viewBox="0 0 210 210"
             >
-              <ProgressArc radius={radius} center={center} percentage={percentage} />
+              <ProgressArc radius={radius} center={center} percentage={safePercentage} />
             </svg>
 
             {/* Center Floating Hub Disc */}
             <div className="absolute w-[126px] h-[126px] rounded-full bg-white shadow-[0_8px_20px_rgba(0,0,0,0.12)] flex flex-col items-center justify-center pointer-events-none select-none z-40">
               <div className="flex items-baseline leading-none select-none">
-                <span className="text-[46px] font-bold text-black tracking-tighter select-none">{percentage}</span>
+                <span className="text-[46px] font-bold text-black tracking-tighter select-none">{safePercentage}</span>
                 <span className="text-[20px] font-semibold text-black ml-[1px] select-none">%</span>
               </div>
               <div className="text-[12px] font-semibold tracking-wide text-[#111111] mt-0.5 select-none">
@@ -162,8 +174,8 @@ export default function DataUsageModal({
                 type="range"
                 min="0"
                 max="100"
-                value={percentage}
-                onChange={(e) => setPercentage(Number(e.target.value))}
+                value={safePercentage}
+                onChange={(e) => setPercentage(clampPercentage(Number(e.target.value)))}
                 className="w-full h-1 bg-neutral-200 rounded-lg appearance-none cursor-pointer accent-[#2fd475] focus:outline-none focus:ring-0"
               />
               <span
