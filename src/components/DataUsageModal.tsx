@@ -3,6 +3,8 @@
 import React, { useState } from "react";
 import { motion } from "framer-motion";
 import { X, Sliders } from "lucide-react";
+import ProgressArc from "@/components/ui/progress-arc";
+import { transitions } from "@/utils/motion";
 
 interface DataUsageModalProps {
   percentage: number;
@@ -22,17 +24,16 @@ export default function DataUsageModal({
   const [isDialHovered, setIsDialHovered] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
 
-  // SVG circular progress calculations
+  // SVG circular progress geometry
   const radius = 82;
-  const circumference = 2 * Math.PI * radius; // Approx 515.221
-  const strokeOffset = circumference - (circumference * percentage) / 100;
+  const center = 105;
 
   return (
     <motion.div
       initial={{ opacity: 0, scale: 0.95, y: 10 }}
       animate={{ opacity: 1, scale: 1, y: 0 }}
       exit={{ opacity: 0, scale: 0.95, y: 10 }}
-      transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
+      transition={transitions.panelEase}
       className="flex flex-col items-center w-[340px]"
     >
       {/* ModalHeader: Flex container containing title and close button */}
@@ -58,7 +59,7 @@ export default function DataUsageModal({
           y: -4,
           boxShadow: "0px 20px 50px rgba(0,0,0,0.12)",
         }}
-        transition={{ duration: 0.3, ease: [0.25, 1, 0.5, 1] }}
+        transition={transitions.hoverLift}
         className="w-[340px] h-[400px] p-6 flex flex-col justify-between bg-white rounded-[20px] shadow-[0_16px_48px_-16px_rgba(0,0,0,0.08)] border border-gray-100/40 select-none relative overflow-visible"
       >
         <div>
@@ -72,7 +73,7 @@ export default function DataUsageModal({
             onMouseEnter={() => setIsDialHovered(true)}
             onMouseLeave={() => setIsDialHovered(false)}
             animate={{ scale: isDialHovered ? 1.05 : 1.0 }}
-            transition={{ type: "spring", stiffness: 120, damping: 20, mass: 0.8 }}
+            transition={transitions.responsiveSpring}
             className="relative w-[210px] h-[210px] flex items-center justify-center mx-auto mt-4 cursor-pointer select-none"
           >
             {/* SVG Gradients Definitions */}
@@ -112,19 +113,7 @@ export default function DataUsageModal({
                 animate={{ opacity: isDialHovered ? 0.60 : 0.45 }}
                 transition={{ duration: 0.3 }}
               >
-                <motion.circle
-                  cx="105"
-                  cy="105"
-                  r={radius}
-                  stroke="url(#progress-gradient)"
-                  strokeWidth="20"
-                  strokeLinecap="round"
-                  fill="none"
-                  strokeDasharray={circumference}
-                  initial={{ strokeDashoffset: circumference }}
-                  animate={{ strokeDashoffset: strokeOffset }}
-                  transition={{ duration: 1.4, ease: [0.25, 1, 0.5, 1] }}
-                />
+                <ProgressArc radius={radius} center={center} percentage={percentage} />
               </motion.svg>
             </div>
 
@@ -133,19 +122,7 @@ export default function DataUsageModal({
               className="absolute inset-0 w-full h-full transform -rotate-90 pointer-events-none z-30 select-none"
               viewBox="0 0 210 210"
             >
-              <motion.circle
-                cx="105"
-                cy="105"
-                r={radius}
-                stroke="url(#progress-gradient)"
-                strokeWidth="20"
-                strokeLinecap="round"
-                fill="none"
-                strokeDasharray={circumference}
-                initial={{ strokeDashoffset: circumference }}
-                animate={{ strokeDashoffset: strokeOffset }}
-                transition={{ duration: 1.4, ease: [0.25, 1, 0.5, 1] }}
-              />
+              <ProgressArc radius={radius} center={center} percentage={percentage} />
             </svg>
 
             {/* Center Floating Hub Disc */}

@@ -1,15 +1,11 @@
 "use client";
 
-import React, { useRef, useState, useEffect } from "react";
-import { motion, useMotionValue, useSpring, useTransform, AnimatePresence } from "framer-motion";
-import { transitions, variants } from "@/utils/motion";
+import React, { useState, useEffect } from "react";
+import { motion } from "framer-motion";
+import { getBezierPoint, getBezierTangentAngle, type CubicBezier } from "@/utils/bezier";
+import { useTilt } from "@/hooks/useTilt";
 
 // --- Types & Helper Interfaces ---
-interface Point2D {
-  x: number;
-  y: number;
-}
-
 interface SphereConfig {
   id: string;
   trackIndex: number; // 0: Outer, 1: Middle, 2: Inner
@@ -17,7 +13,7 @@ interface SphereConfig {
   type: "matte" | "teal" | "capsule";
 }
 
-const trackBases = [
+const trackBases: CubicBezier[] = [
   // Track 3 (Outer / Bottom-most in original visual hierarchy)
   {
     p0: { x: 224, y: -20 },
@@ -41,63 +37,42 @@ const trackBases = [
   },
 ];
 
-// Evaluate cubic bezier at t (0 <= t <= 1)
-const getBezierPoint = (
-  t: number,
-  p0: Point2D,
-  p1: Point2D,
-  p2: Point2D,
-  p3: Point2D
-): Point2D => {
-  const mt = 1 - t;
-  const mt2 = mt * mt;
-  const mt3 = mt2 * mt;
-  const t2 = t * t;
-  const t3 = t2 * t;
-
-  return {
-    x: mt3 * p0.x + 3 * mt2 * t * p1.x + 3 * mt * t2 * p2.x + t3 * p3.x,
-    y: mt3 * p0.y + 3 * mt2 * t * p1.y + 3 * mt * t2 * p2.y + t3 * p3.y,
-  };
-};
-
-// Evaluate derivative of cubic bezier at t to calculate tangent slope angle
-const getBezierTangentAngle = (
-  t: number,
-  p0: Point2D,
-  p1: Point2D,
-  p2: Point2D,
-  p3: Point2D
-): number => {
-  const mt = 1 - t;
-  const mt2 = mt * mt;
-  const t2 = t * t;
-
-  const dx =
-    3 * mt2 * (p1.x - p0.x) +
-    6 * mt * t * (p2.x - p1.x) +
-    3 * t2 * (p3.x - p2.x);
-  const dy =
-    3 * mt2 * (p1.y - p0.y) +
-    6 * mt * t * (p2.y - p1.y) +
-    3 * t2 * (p3.y - p2.y);
-
-  return Math.atan2(dy, dx) * (180 / Math.PI);
+// Per-variant visual layers; all variants share the same positioning wrapper.
+const sphereLayers: Record<SphereConfig["type"], React.ReactNode> = {
+  matte: (
+    <>
+      <div className="absolute w-[22px] h-[22px] translate-x-[5px] translate-y-[7px] bg-black/20 blur-[4.5px] rounded-full transition-transform duration-300 group-hover:translate-x-[6px] group-hover:translate-y-[9px] group-hover:scale-105" />
+      <div className="w-[22px] h-[22px] rounded-full bg-[radial-gradient(circle_at_35%_35%,#ffffff_0%,#f5f5f5_35%,#e0e0e0_70%,#b0b0b0_100%)] border border-white/20 transition-transform duration-300 group-hover:scale-105" />
+    </>
+  ),
+  teal: (
+    <>
+      <div className="absolute w-[22px] h-[22px] translate-x-[4px] translate-y-[6px] bg-cyan-400/35 blur-[7px] rounded-full transition-all duration-300 group-hover:bg-cyan-400/45 group-hover:scale-110" />
+      <div className="w-[22px] h-[22px] rounded-full bg-[radial-gradient(circle_at_35%_35%,rgba(165,243,252,0.95)_0%,rgba(34,211,238,0.75)_50%,rgba(8,145,178,0.95)_85%,rgba(6,182,212,0.6)_100%)] border border-cyan-300/30 backdrop-blur-[1px] transition-transform duration-300 group-hover:scale-110 relative overflow-hidden">
+        <div className="absolute top-[2.5px] left-[2.5px] w-1.5 h-1.5 bg-white/70 rounded-full" />
+      </div>
+    </>
+  ),
+  capsule: (
+    <>
+      <div className="absolute w-[44px] h-[22px] translate-x-[4px] translate-y-[6px] bg-black/15 blur-[4px] rounded-full" />
+      <div className="absolute w-[22px] h-[22px] translate-x-[16px] translate-y-[6px] bg-cyan-400/30 blur-[7px] rounded-full" />
+      <div className="w-[44px] h-[22px] rounded-full flex items-center overflow-hidden border border-white/20 shadow-sm relative transition-all duration-300 group-hover:scale-105">
+        <div className="w-1/2 h-full bg-[radial-gradient(circle_at_50%_35%,#ffffff_0%,#f0f0f0_50%,#cccccc_100%)]" />
+        <div className="w-1/2 h-full bg-[radial-gradient(circle_at_35%_35%,rgba(167,243,254,1)_0%,rgba(34,211,238,0.9)_60%,rgba(8,145,178,1)_100%)] relative">
+          <div className="absolute top-[2px] left-[2px] w-1 h-1 bg-white/80 rounded-full" />
+        </div>
+      </div>
+    </>
+  ),
 };
 
 interface SphereComponentProps {
   sphere: SphereConfig;
-  track: typeof trackBases[number];
-  getBezierPoint: (t: number, p0: Point2D, p1: Point2D, p2: Point2D, p3: Point2D) => Point2D;
-  getBezierTangentAngle: (t: number, p0: Point2D, p1: Point2D, p2: Point2D, p3: Point2D) => number;
+  track: CubicBezier;
 }
 
-function SphereComponent({
-  sphere,
-  track,
-  getBezierPoint,
-  getBezierTangentAngle,
-}: SphereComponentProps) {
+function SphereComponent({ sphere, track }: SphereComponentProps) {
   const [localT, setLocalT] = useState(sphere.t);
 
   useEffect(() => {
@@ -108,98 +83,34 @@ function SphereComponent({
     return () => clearInterval(interval);
   }, [sphere.t, sphere.trackIndex]);
 
-  const pos = getBezierPoint(localT, track.p0, track.p1, track.p2, track.p3);
-  const angle = getBezierTangentAngle(localT, track.p0, track.p1, track.p2, track.p3);
+  const pos = getBezierPoint(track, localT);
+  const rotation =
+    sphere.type === "capsule" ? ` rotate(${getBezierTangentAngle(track, localT)}deg)` : "";
 
-  const leftPct = `${(pos.x / 1000) * 100}%`;
-  const topPct = `${(pos.y / 500) * 100}%`;
-
-  if (sphere.type === "matte") {
-    return (
-      <div
-        className="absolute pointer-events-auto transform -translate-x-1/2 -translate-y-1/2 group"
-        style={{ left: leftPct, top: topPct }}
-      >
-        <div className="absolute w-[22px] h-[22px] translate-x-[5px] translate-y-[7px] bg-black/20 blur-[4.5px] rounded-full transition-transform duration-300 group-hover:translate-x-[6px] group-hover:translate-y-[9px] group-hover:scale-105" />
-        <div className="w-[22px] h-[22px] rounded-full bg-[radial-gradient(circle_at_35%_35%,#ffffff_0%,#f5f5f5_35%,#e0e0e0_70%,#b0b0b0_100%)] border border-white/20 transition-transform duration-300 group-hover:scale-105" />
-      </div>
-    );
-  }
-
-  if (sphere.type === "teal") {
-    return (
-      <div
-        className="absolute pointer-events-auto transform -translate-x-1/2 -translate-y-1/2 group"
-        style={{ left: leftPct, top: topPct }}
-      >
-        <div className="absolute w-[22px] h-[22px] translate-x-[4px] translate-y-[6px] bg-cyan-400/35 blur-[7px] rounded-full transition-all duration-300 group-hover:bg-cyan-400/45 group-hover:scale-110" />
-        <div className="w-[22px] h-[22px] rounded-full bg-[radial-gradient(circle_at_35%_35%,rgba(165,243,252,0.95)_0%,rgba(34,211,238,0.75)_50%,rgba(8,145,178,0.95)_85%,rgba(6,182,212,0.6)_100%)] border border-cyan-300/30 backdrop-blur-[1px] transition-transform duration-300 group-hover:scale-110 relative overflow-hidden">
-          <div className="absolute top-[2.5px] left-[2.5px] w-1.5 h-1.5 bg-white/70 rounded-full" />
-        </div>
-      </div>
-    );
-  }
-
-  if (sphere.type === "capsule") {
-    return (
-      <div
-        className="absolute pointer-events-auto transform -translate-x-1/2 -translate-y-1/2 group"
-        style={{
-          left: leftPct,
-          top: topPct,
-          transform: `translate(-50%, -50%) rotate(${angle}deg)`,
-        }}
-      >
-        <div className="absolute w-[44px] h-[22px] translate-x-[4px] translate-y-[6px] bg-black/15 blur-[4px] rounded-full" />
-        <div className="absolute w-[22px] h-[22px] translate-x-[16px] translate-y-[6px] bg-cyan-400/30 blur-[7px] rounded-full" />
-        <div className="w-[44px] h-[22px] rounded-full flex items-center overflow-hidden border border-white/20 shadow-sm relative transition-all duration-300 group-hover:scale-105">
-          <div className="w-1/2 h-full bg-[radial-gradient(circle_at_50%_35%,#ffffff_0%,#f0f0f0_50%,#cccccc_100%)]" />
-          <div className="w-1/2 h-full bg-[radial-gradient(circle_at_35%_35%,rgba(167,243,254,1)_0%,rgba(34,211,238,0.9)_60%,rgba(8,145,178,1)_100%)] relative">
-            <div className="absolute top-[2px] left-[2px] w-1 h-1 bg-white/80 rounded-full" />
-          </div>
-        </div>
-      </div>
-    );
-  }
-
-  return null;
+  return (
+    <div
+      className="absolute pointer-events-auto group"
+      style={{
+        left: `${(pos.x / 1000) * 100}%`,
+        top: `${(pos.y / 500) * 100}%`,
+        transform: `translate(-50%, -50%)${rotation}`,
+      }}
+    >
+      {sphereLayers[sphere.type]}
+    </div>
+  );
 }
 
 export default function RailsShowcaseComponent() {
-  const containerRef = useRef<HTMLDivElement>(null);
-
   // For interactive page/tab selector state "02 / 03"
   const [activeSlide, setActiveSlide] = useState(2); // Default to slide 2
 
   // Mouse hover coordinate tracking for premium 3D tilt/parallax card effect
-  const x = useMotionValue(0);
-  const y = useMotionValue(0);
-
-  const rotateX = useSpring(useTransform(y, [-0.5, 0.5], [6, -6]), { stiffness: 90, damping: 22 });
-  const rotateY = useSpring(useTransform(x, [-0.5, 0.5], [-8, 8]), { stiffness: 90, damping: 22 });
-
-  // Handle pointer move to update motion values
-  const handlePointerMove = (event: React.PointerEvent<HTMLDivElement>) => {
-    if (!containerRef.current) return;
-    const rect = containerRef.current.getBoundingClientRect();
-    const width = rect.width;
-    const height = rect.height;
-    const mouseX = event.clientX - rect.left - width / 2;
-    const mouseY = event.clientY - rect.top - height / 2;
-    x.set(mouseX / width);
-    y.set(mouseY / height);
-  };
-
-  const handlePointerLeave = () => {
-    x.set(0);
-    y.set(0);
-  };
-
-  // --- Cubic Bezier Evaluation & Alignment ---
-
-
-  // State for marble interactive shifting (gives a feeling of weight when hover/drag)
-  const [hoveredTrack, setHoveredTrack] = useState<number | null>(null);
+  const { ref, rotateX, rotateY, onPointerMove, onPointerLeave } = useTilt<HTMLDivElement>({
+    maxRotateX: 6,
+    maxRotateY: 8,
+    spring: { stiffness: 90, damping: 22 },
+  });
 
   // Configure original sphere positions along the tracks
   const spheresConfig: SphereConfig[] = [
@@ -216,9 +127,9 @@ export default function RailsShowcaseComponent() {
     <div className="w-full max-w-[1000px] px-2 md:px-4">
       {/* 3D tilt floating showcase card */}
       <motion.div
-        ref={containerRef}
-        onPointerMove={handlePointerMove}
-        onPointerLeave={handlePointerLeave}
+        ref={ref}
+        onPointerMove={onPointerMove}
+        onPointerLeave={onPointerLeave}
         style={{ rotateX, rotateY, transformStyle: "preserve-3d" }}
         className="w-full bg-[#EAEAEA] rounded-[36px] p-8 md:p-12 pb-10 md:pb-14 shadow-container border border-white/50 relative overflow-hidden flex flex-col justify-between min-h-[540px] select-none"
       >
@@ -347,13 +258,7 @@ export default function RailsShowcaseComponent() {
 
           {/* Render Physical Spheres along the curves */}
           {spheresConfig.map((sphere) => (
-            <SphereComponent
-              key={sphere.id}
-              sphere={sphere}
-              track={trackBases[sphere.trackIndex]}
-              getBezierPoint={getBezierPoint}
-              getBezierTangentAngle={getBezierTangentAngle}
-            />
+            <SphereComponent key={sphere.id} sphere={sphere} track={trackBases[sphere.trackIndex]} />
           ))}
         </div>
 

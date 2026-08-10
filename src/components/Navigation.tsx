@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
+import { cn } from "@/utils/cn";
 
 export default function Navigation() {
   const tabs = ["Reviews", "Solve", "Prevent"];
@@ -14,11 +15,12 @@ export default function Navigation() {
           <button
             key={tab}
             onClick={() => setActiveTab(tab)}
-            className={`relative flex items-center justify-center px-4 py-2 text-[13px] font-medium rounded-full transition-all duration-300 ${
+            className={cn(
+              "relative flex items-center justify-center px-4 py-2 text-[13px] font-medium rounded-full transition-all duration-300",
               isActive
                 ? "bg-white text-[#111111] shadow-pill-active border border-[#E1E0DC]/40"
                 : "text-[#7D7D7D] hover:text-[#111111]"
-            }`}
+            )}
           >
             {tab === "Reviews" && (
               <span className="relative flex h-2 w-2 mr-1.5">

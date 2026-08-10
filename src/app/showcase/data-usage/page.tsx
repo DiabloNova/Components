@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { Sliders } from "lucide-react";
 import DataUsageModal from "@/components/DataUsageModal";
+import PageShell from "@/components/ui/page-shell";
 
 export default function DataUsageShowcasePage() {
   const [isOpen, setIsOpen] = useState(true);
@@ -14,7 +15,7 @@ export default function DataUsageShowcasePage() {
   const usedAmount = parseFloat(((totalAmount * percentage) / 100).toFixed(1));
 
   return (
-    <main className="min-h-screen w-full flex items-center justify-center bg-[#f7f7f7] relative overflow-hidden selection:bg-neutral-800 selection:text-white p-4">
+    <PageShell background="bg-[#f7f7f7]" padding="p-4" className="overflow-hidden">
       {/* Abstracted structural backdrop or ambient grid lines for premium aesthetics */}
       <div className="absolute inset-0 bg-[radial-gradient(#e1e1e1_1.2px,transparent_1.2px)] [background-size:24px_24px] opacity-40 pointer-events-none" />
 
@@ -50,6 +51,6 @@ export default function DataUsageShowcasePage() {
           </motion.button>
         )}
       </AnimatePresence>
-    </main>
+    </PageShell>
   );
 }

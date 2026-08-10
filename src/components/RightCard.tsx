@@ -2,6 +2,7 @@
 
 import React, { useState } from "react";
 import { ArrowRight } from "lucide-react";
+import { cn } from "@/utils/cn";
 
 export default function RightCard() {
   const [isHovered, setIsHovered] = useState(false);
@@ -54,9 +55,10 @@ export default function RightCard() {
           <button className="shadow-btn-white flex items-center gap-1.5 bg-white text-[#111111] hover:bg-[#F5F5F7] px-4 py-2.5 rounded-full text-[13px] font-bold transition-all duration-300 group whitespace-nowrap">
             <span className="whitespace-nowrap">Restart investigation</span>
             <ArrowRight
-              className={`w-4 h-4 shrink-0 transition-transform duration-300 ${
-                isHovered ? "translate-x-1" : ""
-              }`}
+              className={cn(
+                "w-4 h-4 shrink-0 transition-transform duration-300",
+                isHovered && "translate-x-1"
+              )}
               strokeWidth={2.5}
             />
           </button>

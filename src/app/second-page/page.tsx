@@ -4,10 +4,11 @@ import LeftCard from "@/components/LeftCard";
 import RightCard from "@/components/RightCard";
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
+import PageShell from "@/components/ui/page-shell";
 
 export default function SecondPage() {
   return (
-    <main className="flex min-h-screen flex-col items-center justify-center bg-[#EAEAEA] p-4 md:p-8 py-12 md:py-16 gap-8 selection:bg-neutral-800 selection:text-white">
+    <PageShell className="gap-8">
       {/* Back button above the main container */}
       <div className="w-full max-w-[880px] flex justify-start">
         <Link
@@ -49,6 +50,6 @@ export default function SecondPage() {
         </div>
 
       </div>
-    </main>
+    </PageShell>
   );
 }

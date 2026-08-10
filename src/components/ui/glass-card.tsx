@@ -1,41 +1,28 @@
 "use client";
 
 import React from "react";
-import { motion, useMotionValue, useSpring, useTransform } from "framer-motion";
+import { motion } from "framer-motion";
 import { ArrowRight } from "lucide-react";
+import { useTilt } from "@/hooks/useTilt";
+import { cn } from "@/utils/cn";
 
 export interface GlassCardProps {
   className?: string;
 }
 
 export default function GlassCard({ className }: GlassCardProps) {
-  const x = useMotionValue(0);
-  const y = useMotionValue(0);
-
-  const rotateX = useTransform(y, [-100, 100], [8, -8]);
-  const rotateY = useTransform(x, [-100, 100], [-8, 8]);
-
-  const springConfig = { damping: 25, stiffness: 180 };
-  const smoothRotateX = useSpring(rotateX, springConfig);
-  const smoothRotateY = useSpring(rotateY, springConfig);
+  const { ref, rotateX, rotateY, onPointerMove, onPointerLeave } = useTilt<HTMLDivElement>();
 
   return (
     <motion.div
-      style={{
-        rotateX: smoothRotateX,
-        rotateY: smoothRotateY,
-        transformStyle: "preserve-3d",
-      }}
-      onMouseMove={(e: React.MouseEvent) => {
-        const rect = e.currentTarget.getBoundingClientRect();
-        x.set(e.clientX - rect.left - rect.width / 2);
-        y.set(e.clientY - rect.top - rect.height / 2);
-      }}
-      onMouseLeave={() => {
-        x.set(0);
-        y.set(0);
-      }}
-      className={`relative w-full max-w-[370px] h-[490px] rounded-[48px] border-[1.5px] border-white/60 bg-white/20 p-11 backdrop-blur-[30px] shadow-[0_24px_50px_-12px_rgba(0,0,0,0.06),_inset_0_2px_4px_rgba(255,255,255,0.4)] flex flex-col justify-between transition-shadow duration-300 hover:shadow-[0_30px_60px_-12px_rgba(0,0,0,0.1),_inset_0_2px_4px_rgba(255,255,255,0.5)] ${className || ""}`}
+      ref={ref}
+      style={{ rotateX, rotateY, transformStyle: "preserve-3d" }}
+      onPointerMove={onPointerMove}
+      onPointerLeave={onPointerLeave}
+      className={cn(
+        "relative w-full max-w-[370px] h-[490px] rounded-[48px] border-[1.5px] border-white/60 bg-white/20 p-11 backdrop-blur-[30px] shadow-[0_24px_50px_-12px_rgba(0,0,0,0.06),_inset_0_2px_4px_rgba(255,255,255,0.4)] flex flex-col justify-between transition-shadow duration-300 hover:shadow-[0_30px_60px_-12px_rgba(0,0,0,0.1),_inset_0_2px_4px_rgba(255,255,255,0.5)]",
+        className
+      )}
     >
       {/* Elegant glint overlay */}
       <div className="absolute inset-0 rounded-[46px] bg-gradient-to-tr from-transparent via-white/5 to-white/10 pointer-events-none" />
